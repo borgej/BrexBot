@@ -1,5 +1,6 @@
 import mysql.connector
 import logging
+import random
 from mysql.connector import Error
 
 
@@ -19,6 +20,7 @@ class Db:
         # Get a cursor
         self.cur = self.cnx.cursor()
 
+    # Check if a user exists in the database
     def viewer_exists(self, twitchusername):
 
         self.cur.execute(
@@ -32,6 +34,7 @@ class Db:
             logging.debug(twitchusername + " doesn't exist!")
             return False
 
+    # Add a user to the database using twitchusername and twitchuserid
     def create_viewer(self, twitchusername, twitchuserid):
         try:
             sql = "INSERT INTO viewer (twitchusername, twitchuserid, points) " \
@@ -43,4 +46,21 @@ class Db:
             logging.debug("Added user " + twitchusername)
         except Error as e:
             logging.error("Unable to create viewer.", e)
+
+    # Used to add points to all viewers currently in the chat
+    def add_points(self, viewer_list, points):
+        try:
+            self.cur.execute("SELECT * FROM viewer")
+            results = self.cur.fetchall()
+            for row in results:
+                if row[1] in viewer_list:
+                    sql = """UPDATE viewer SET points = %s WHERE twitchusername = %s"""
+                    val = (points + row[3], row[1])
+                    self.cur.execute(sql, val)
+            self.cnx.commit()
+            self.cnx.close()
+            logging.debug("All points added, changes committed and database closed.")
+        except Error as e:
+            logging.error("Unable to add points", e)
+
 
