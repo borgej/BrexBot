@@ -44,9 +44,3 @@ class Db:
         except Error as e:
             logging.error("Unable to create viewer.", e)
 
-
-logging.basicConfig(level=logging.DEBUG)
-logging.debug('This will get logged')
-
-con = Db()
-con.create_viewer("tomisme", 1)
