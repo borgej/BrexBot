@@ -1,14 +1,27 @@
 import unittest
-import Db
+from Db import Db
 
 class Test(unittest.TestCase):
     def test_something(self):
         self.assertEqual(True, True)
 
     def test_user_exists_in_db(self):
-        user = "bob"
-        res = Db.viewer_exists(user)
+        twitchusername = "bob"
+        res = Db().viewer_exists(twitchusername)
         self.assertEqual(res, True)
+
+    def test_add_points(self):
+        twitchusername = "bob"
+        points = 100
+        res = Db().add_points(twitchusername, points)
+        self.assertEqual(res, True)
+
+    def test_remove_points(self):
+        twitchusername = "bob"
+        points = 100
+        res = Db().remove_points(twitchusername, points)
+        self.assertEqual(res, True)
+
 
 
 

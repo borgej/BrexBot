@@ -1,4 +1,6 @@
 import random
+from Db import Db
+import logging
 
 
 class Roulette:
@@ -20,27 +22,32 @@ class Roulette:
 
 
 class Dice:
-    def __init__(self, user, loot, bet):
-        # Retrieve viewers loot from the data base
-        # .......some database code call here......
-        # The bet will also be determined from the viewers gamble message
-        number_rolled = random.randint(1, 100)
+    def __init__(self, twitchusername, bet):
 
-        bet_string = str(bet)
-        roll_string = str(number_rolled)
-
-        if number_rolled <= 50:
-            print(user + " rolled a " + roll_string + ". And lost " + bet_string + ".")
-            loot -= bet
-        elif 51 <= number_rolled <= 95:
-            print(user + " rolled a " + roll_string + ". And won " + bet_string + ".")
-            loot += bet
+        # Create the connection the database and retrieve viewers current points
+        con = Db()
+        points = con.get_points(twitchusername)
+        if points < bet:
+            # This will be a twitch message when using an API
+            logging.error("You do not have enough points to make this bet")
         else:
-            big_win = bet * 1.5
-            big_string = str(big_win)
-            print(user + " rolled a " + roll_string + ". And won " + big_string + ". High Roller!")
-            loot += big_win
+            logging.info("Running bet")
+            number_rolled = random.randint(1, 100)
+            if number_rolled <= 50:
+                con.remove_points(twitchusername, bet)
+                logging.info(twitchusername + " lost.")
+            elif 51 <= number_rolled <= 95:
+                con.add_points(twitchusername, bet)
+                logging.info(twitchusername + " won.")
+            else:
+                big_win = bet * 1.5
+                con.add_points(twitchusername, big_win)
+                logging.info(twitchusername + " won the big one.")
 
+
+logging.basicConfig(level=logging.DEBUG)
+logging.debug('This will get logged')
+Dice("aj", 1000)
 
 
 

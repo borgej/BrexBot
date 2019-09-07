@@ -29,9 +29,11 @@ class Db:
 
         if self.cur.fetchone() is not None:
             logging.debug(twitchusername + " exists!")
+            self.cnx.close()
             return True
         else:
             logging.debug(twitchusername + " doesn't exist!")
+            self.cnx.close()
             return False
 
     # Add a user to the database using twitchusername and twitchuserid
@@ -60,7 +62,37 @@ class Db:
             self.cnx.commit()
             self.cnx.close()
             logging.debug("All points added, changes committed and database closed.")
+            return True
         except Error as e:
             logging.error("Unable to add points", e)
+            return False
 
+    # Used to remove points from a viewer / list of viewers
+    def remove_points(self, twitchusername, points):
+        try:
+            self.cur.execute("SELECT * FROM viewer")
+            results = self.cur.fetchall()
+            for row in results:
+                if row[1] in twitchusername:
+                    sql = """UPDATE viewer SET points = %s WHERE twitchusername = %s"""
+                    val = (row[3] - points, row[1])
+                    self.cur.execute(sql, val)
+            self.cnx.commit()
+            self.cnx.close()
+            logging.debug("Points removed, changes committed and database closed.")
+            return True
+        except Error as e:
+            logging.error("Unable to remove points", e)
+            return False
 
+    # Retrieve points from the database.
+    # To be used with games and point checking command
+    def get_points(self, twitchusername):
+        try:
+            self.cur.execute(
+            "SELECT points FROM viewer WHERE twitchusername = %s",
+            (twitchusername,))
+            result = self.cur.fetchone()
+            return result[0]
+        except Error as e:
+            logging.error("Unable to retrieve points", e)
