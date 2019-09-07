@@ -52,7 +52,7 @@ class Db:
 
     def remove_viewer(self, twitchusername, channel, twitchuserid):
         try:
-            sql = "DELETE FROM viewer where twitchuserid = " + twitchuserid + " AND channel = '" + channel + "'" + " AND twitchusername = '" + twitchusername + "'"
+            sql = "DELETE FROM viewer where twitchuserid = " + str(twitchuserid) + " AND channel = '" + channel + "'" + " AND twitchusername = '" + twitchusername + "'"
             self.cur.execute(sql)
             self.cnx.commit()
             self.cnx.close()

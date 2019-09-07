@@ -7,8 +7,7 @@ class Test(unittest.TestCase):
         # setup
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        self.db.create_viewer(twitchusername, channel, -1)
-        self.assertEqual(True, True)
+        Db().create_viewer(twitchusername, channel, -1)
 
     def test_user_exists_in_db(self):
         twitchusername = "IntegrationTestUser"
@@ -38,8 +37,7 @@ class Test(unittest.TestCase):
     def test_cleanup_remove_viewer(self):
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        Db().remove_viewer(twitchusername, channel, -1)
-        self.assertEqual(True, True)
+        Db().remove_viewer(channel, twitchusername, -1)
 
 if __name__ == '__main__':
     unittest.main()
