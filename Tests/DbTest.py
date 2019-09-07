@@ -3,7 +3,7 @@ import mysql.connector
 from Db import Db
 
 class Test(unittest.TestCase):
-    def test_setup(self):
+    def setup(self):
         # setup
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
@@ -16,6 +16,7 @@ class Test(unittest.TestCase):
         self.assertEqual(res, True)
 
     def test_add_points(self):
+        self.setup()
         twitchusername = "IntegrationTestUser"
         points = 1000
         channel = "TestChannel"
@@ -23,9 +24,11 @@ class Test(unittest.TestCase):
         expected_points = current_points + points
         Db().add_points(twitchusername, channel, points)
         new_points_total = Db().get_points(twitchusername, channel)
+        self.cleanup()
         self.assertEqual(expected_points, new_points_total)
 
     def test_remove_points(self):
+        self.setup()
         twitchusername = "IntegrationTestUser"
         points = 1000
         channel = "TestChannel"
@@ -33,9 +36,10 @@ class Test(unittest.TestCase):
         expected_points = current_points - points
         Db().remove_points(twitchusername, channel, points)
         new_points_total = Db().get_points(twitchusername, channel)
+        self.cleanup()
         self.assertEqual(expected_points, new_points_total)
 
-    def test_cleanup_remove_viewer(self):
+    def cleanup(self):
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
         Db().remove_viewer(twitchusername, channel, -1)
