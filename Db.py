@@ -50,6 +50,16 @@ class Db:
         except Error as e:
             logging.error("Unable to create viewer.", e)
 
+    def remove_viewer(self, twitchusername, channel, twitchuserid):
+        try:
+            sql = "DELETE FROM viewer where twitchuserid = " + twitchuserid + " AND channel = '" + channel + "'" + " AND twitchusername = '" + twitchusername + "'"
+            self.cur.execute(sql)
+            self.cnx.commit()
+            self.cnx.close()
+            logging.debug("removed user " + twitchusername)
+        except Error as e:
+            logging.error("Unable to remove viewer.", e)
+
     # Used to add points to all viewers currently in the chat
     def add_points(self, viewer_list, channel, points):
         try:
