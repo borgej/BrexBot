@@ -1,6 +1,7 @@
 import mysql.connector
 import logging
-import random
+import time
+import datetime
 from mysql.connector import Error
 
 
@@ -96,6 +97,24 @@ class Db:
             return result[0]
         except Error as e:
             logging.error("Unable to retrieve points", e)
+
+    # Add a timestamp to the database when a viewer plays a game.
+    def add_last_game_time(self, twitchusername, game_type):
+        try:
+            ts = time.time()
+            timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            if game_type == "dice":
+                sql = """UPDATE viewer SET lastgamble = %s WHERE twitchusername = %s"""
+                val = (timestamp, twitchusername)
+                self.cur.execute(sql, val)
+            elif game_type == "roulette":
+                sql = """UPDATE viewer SET lastroulette = %s WHERE twitchusername = %s"""
+                val = (timestamp, twitchusername)
+                self.cur.execute(sql, val)
+            self.cnx.commit()
+            self.cnx.close()
+        except Error as e:
+            logging.error("Unable to set time stamp", e)
 
     # Commit db changes
     def commit(self):

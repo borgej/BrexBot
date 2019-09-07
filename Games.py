@@ -45,11 +45,6 @@ class Dice:
                 logging.info(twitchusername + " won the big one.")
 
 
-logging.basicConfig(level=logging.DEBUG)
-logging.debug('This will get logged')
-Dice("aj", 1000)
-
-
 
 
 
