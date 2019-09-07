@@ -5,4 +5,3 @@ __license__ = "MIT"
 __version__ = "1.0"
 __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
-

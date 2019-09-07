@@ -116,6 +116,22 @@ class Db:
         except Error as e:
             logging.error("Unable to set time stamp", e)
 
+    # Check database for time since last gamble (minutes)
+    def time_since_last_gamble(self, twitchusername):
+        try:
+            ts = time.time()
+            current_time = datetime.datetime.fromtimestamp(ts)
+            self.cur.execute(
+                "SELECT lastgamble FROM viewer WHERE twitchusername = %s",
+                (twitchusername,))
+            result = self.cur.fetchone()
+            last_gamble = result[0]
+            time_difference = current_time - last_gamble
+            time_in_minutes = time_difference.total_seconds() / 60
+            return time_in_minutes
+        except Error as e:
+            logging.error("Unable to retrieve time data.")
+
     # Commit db changes
     def commit(self):
         try:
