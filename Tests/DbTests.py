@@ -5,7 +5,6 @@ class Test(unittest.TestCase):
     def test_something(self):
         self.assertEqual(True, True)
 
-class Test(unittest.TestCase):
     def test_user_exists_in_db(self):
         twitchusername = "bob"
         res = Db().viewer_exists(twitchusername)
