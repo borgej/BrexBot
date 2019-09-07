@@ -38,7 +38,7 @@ class Test(unittest.TestCase):
     def test_cleanup_remove_viewer(self):
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        Db().remove_viewer(channel, twitchusername, -1)
+        Db().remove_viewer(twitchusername, channel, -1)
 
 if __name__ == '__main__':
     unittest.main()

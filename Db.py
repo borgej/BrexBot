@@ -30,11 +30,9 @@ class Db:
 
         if self.cur.fetchone() is not None:
             logging.debug(twitchusername + " exists in " + channel + "'s channel.")
-            self.cnx.close()
             return True
         else:
             logging.debug(twitchusername + " doesn't exist in " + channel + "'s channel.")
-            self.cnx.close()
             return False
 
     # Add a user to the database using twitchusername and twitchuserid
@@ -45,7 +43,6 @@ class Db:
             val = (twitchusername, channel, twitchuserid, 1000)
             self.cur.execute(sql, val)
             self.cnx.commit()
-            self.cnx.close()
             logging.debug("Added user " + twitchusername)
         except Error as e:
             logging.error("Unable to create viewer.", e)
@@ -55,7 +52,6 @@ class Db:
             sql = "DELETE FROM viewer where twitchuserid = " + str(twitchuserid) + " AND channel = '" + channel + "'" + " AND twitchusername = '" + twitchusername + "'"
             self.cur.execute(sql)
             self.cnx.commit()
-            self.cnx.close()
             logging.debug("removed user " + twitchusername)
         except Error as e:
             logging.error("Unable to remove viewer.", e)
@@ -71,7 +67,6 @@ class Db:
                     val = (points + row[4], row[1], channel)
                     self.cur.execute(sql, val)
             self.cnx.commit()
-            self.cnx.close()
             logging.debug("All points added, changes committed and database closed.")
             return True
         except Error as e:
@@ -89,7 +84,6 @@ class Db:
                     val = (row[4] - points, row[1], channel)
                     self.cur.execute(sql, val)
             self.cnx.commit()
-            self.cnx.close()
             logging.debug("Points removed, changes committed and database closed.")
             return True
         except Error as e:
@@ -122,7 +116,6 @@ class Db:
                 val = (timestamp, twitchusername, channel)
                 self.cur.execute(sql, val)
             self.cnx.commit()
-            self.cnx.close()
         except Error as e:
             logging.error("Unable to set time stamp", e)
 
@@ -141,7 +134,7 @@ class Db:
             print(time_in_minutes)
             return time_in_minutes
         except Error as e:
-            logging.error("Unable to retrieve time data.")
+            logging.error("Unable to retrieve time data.", e)
 
     # Commit db changes
     def commit(self):
