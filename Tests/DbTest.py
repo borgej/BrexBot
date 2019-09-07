@@ -10,9 +10,11 @@ class Test(unittest.TestCase):
         Db().create_viewer(twitchusername, channel, -1)
 
     def test_user_exists_in_db(self):
+        self.setup()
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
         res = Db().viewer_exists(twitchusername, channel)
+        self.cleanup()
         self.assertEqual(res, True)
 
     def test_add_points(self):
