@@ -96,3 +96,22 @@ class Db:
             return result[0]
         except Error as e:
             logging.error("Unable to retrieve points", e)
+
+    # Commit db changes
+    def commit(self):
+        try:
+            self.cnx.commit()
+            return True
+        except Error as e:
+            logging.error("Error on committing db changes: ", e)
+            return False
+
+    # Close connection
+    def close(self):
+        try:
+            self.cnx.close()
+            logging.debug("DB connection closed.")
+            return True
+        except Error as e:
+            logging.error("Error on closing connection: ", e)
+            return False
