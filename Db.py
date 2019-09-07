@@ -40,7 +40,7 @@ class Db:
         try:
             sql = "INSERT INTO viewer (twitchusername, channel, twitchuserid, points) " \
                   "VALUES (%s, %s, %s, %s)"
-            val = (twitchusername, channel, twitchuserid, 1000)
+            val = (twitchusername, channel, twitchuserid, 0)
             self.cur.execute(sql, val)
             self.cnx.commit()
             logging.debug("Added user " + twitchusername)
