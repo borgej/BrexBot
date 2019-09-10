@@ -43,6 +43,7 @@ class ChatHandler(twitch):
     def connect_to_chat(self, message_checker):
         try:
             self.chat_connection = self.Chat(channel=self.channel, nickname=self.nickname, oauth=self.oauth)
+
             # call message_checker on every received message
             self.chat_connection.subscribe(lambda message: message_checker(message))
             # Log every message
@@ -50,10 +51,14 @@ class ChatHandler(twitch):
 
             self.send_message("I just connected...")
             self.logger.info("Connected to channel: " + self.channel)
+
             return self.chat_connection
         except Exception as e:
-            self.logger.exception("Error on connecting to channel: " + self.channel)
+            self.logger.exception("Error connecting to channel: " + self.channel)
 
     # Send message to chat
     def send_message(self, message):
-        self.chat_connection.send(self.chat)
+        try:
+            self.chat_connection.send(message)
+        except Exception as e:
+            self.logger.exception("Error sending chat message: " + message)
