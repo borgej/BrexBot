@@ -3,16 +3,18 @@ import logging
 
 
 class ChatHandler(twitch):
-    def __init__(self, channelname, nickname, oauth):
+    def __init__(self, channelname, nickname, oauth, commands = None, triggers = None, polls = None, banned_words = None):
         self.nickname = nickname
         self.channel = "#" + channelname
         self.oauth = oauth
         self.chat_connection = None
 
         self.chat_log = []
-        self.triggers = None
-        self.polls = None
-        self.banned_words = None
+        self.commands = commands
+        self.triggers = triggers
+        self.polls = polls
+        self.banned_words = banned_words
+
 
         self.logger = logging.getLogger()
 
@@ -20,17 +22,22 @@ class ChatHandler(twitch):
     def log_message(self, chat_message):
         self.chat_log.append(chat_message)
 
+    # Update commands if changed outside ChatHandler
+    def set_commands(self, commands):
+        self.commands = commands
+        self.logger.info("Updated commands")
+
     # Update triggers if changed outside ChatHandler
     def set_triggers(self, triggers):
         self.triggers = triggers
         self.logger.info("Updated triggers")
 
-    # Set banned words
+    # Update banned words if changed outside ChatHandler
     def set_banned_words(self, banned_words):
         self.banned_words = banned_words
         self.logger.info("Updated banned words")
 
-    # Set polls
+    # Update polls if changed outside ChatHandler
     def set_polls(self, polls):
         self.polls = polls
         self.logger.info("Updated polls")
@@ -53,6 +60,7 @@ class ChatHandler(twitch):
             self.logger.info("Connected to channel: " + self.channel)
 
             return self.chat_connection
+
         except Exception as e:
             self.logger.exception("Error connecting to channel: " + self.channel)
 
