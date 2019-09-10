@@ -2,7 +2,7 @@ import twitch
 import logging
 
 
-class ChatHandler(twitch):
+class ChatHandler():
     def __init__(self, channelname, nickname, oauth, commands = None, triggers = None, polls = None, banned_words = None):
         self.nickname = nickname
         self.channel = "#" + channelname
@@ -14,7 +14,6 @@ class ChatHandler(twitch):
         self.triggers = triggers
         self.polls = polls
         self.banned_words = banned_words
-
 
         self.logger = logging.getLogger()
 
@@ -47,16 +46,19 @@ class ChatHandler(twitch):
         return self.chat_log
 
     # Connect to chat
-    def connect_to_chat(self, message_checker):
+    def connect_to_chat(self, message_checker, verbose_connect = False):
         try:
-            self.chat_connection = self.Chat(channel=self.channel, nickname=self.nickname, oauth=self.oauth)
+            self.chat_connection = twitch.Chat(channel=self.channel, nickname=self.nickname, oauth=self.oauth)
 
             # call message_checker on every received message
             self.chat_connection.subscribe(lambda message: message_checker(message))
             # Log every message
             self.chat_connection.subscribe(lambda message: self.log_message(message))
 
-            self.send_message("I just connected...")
+            # Advertise connect in channel if set
+            if(verbose_connect):
+                self.send_message("I just connected...")
+
             self.logger.info("Connected to channel: " + self.channel)
 
             return self.chat_connection
