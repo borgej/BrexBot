@@ -21,7 +21,7 @@ class ApiCalls:
             twitch_data = json.loads(json.dumps(json.loads(resp.read())))
             return twitch_data
         except Exception as e:
-            logging.error(e, "\nError parsing JSON data.")
+            logging.error("Error parsing JSON data.")
 
     # Get the ID of a given username
     def get_user_id(self, username=Config.CHANNEL_NAME):
@@ -31,7 +31,7 @@ class ApiCalls:
             user_id = user_data['data'][0]['id']
             return user_id
         except Exception as e:
-            logging.error(e, "\nUnable to retrieve the user ID for " + username)
+            logging.error("Unable to retrieve the user ID for " + username)
 
     # Gather all available data for a specified user
     def get_user_data(self, username=Config.CHANNEL_NAME):
@@ -42,13 +42,13 @@ class ApiCalls:
             print(user)
             return user
         except Exception as e:
-            logging.error(e, "\nUnable to retrieve the data for " + username)
+            logging.error("Unable to retrieve the data for " + username)
 
     def get_channel_id(self, channel_name=Config.CHANNEL_NAME):
         try:
             return self.channel_id
         except Exception as e:
-            logging.error(e, "\nCould not retrieve channel ID for " + channel_name)
+            logging.error("Could not retrieve channel ID for " + channel_name)
 
     # Get first 100 moderators of a channel. "Pagination" must be used for more than 100 results.
     # Request requires a valid Bearer (Helix Oauth) token.
@@ -61,7 +61,7 @@ class ApiCalls:
                 moderator_names.append(item['user_name'])
             return moderator_names
         except Exception as e:
-            logging.error(e, "\nCould not retrieve Moderator list for the channel")
+            logging.error("Could not retrieve Moderator list for the channel")
 
     # Check if a specified user is a moderator in the channel
     def is_moderator(self, viewer):
@@ -74,7 +74,7 @@ class ApiCalls:
             else:
                 return True
         except Exception as e:
-            logging.error(e, "\nUnable to determin if " + viewer + " is a moderator.")
+            logging.error("Unable to determin if " + viewer + " is a moderator.")
 
     # Check if a specified user is following the channel
     def is_follower(self, viewer):
@@ -87,7 +87,7 @@ class ApiCalls:
             else:
                 return follow_data['data'][0]['followed_at']
         except Exception as e:
-            logging.error(e, "\nUnable to determin if " + viewer + " is following the channel.")
+            logging.error("Unable to determin if " + viewer + " is following the channel.")
 
     # Check if a viewer is subscribed to teh channel
     def is_subscriber(self, viewer):
@@ -97,7 +97,7 @@ class ApiCalls:
             sub_data = self.json_data(url)
             return sub_data
         except Exception as e:
-            logging.error(e, "\nUnable to determin if " + viewer + " is subscribed to the channel.")
+            logging.error("Unable to determin if " + viewer + " is subscribed to the channel.")
 
     # Creates a clip from the live stream. Test when live as
     # when not live it shows a previously created clip.
@@ -106,7 +106,7 @@ class ApiCalls:
             url = 'https://api.twitch.tv/helix/clips?broadcaster_id=' + self.channel_id
             clip_data = self.json_data(url)
         except Exception as e:
-            logging.error(e, "\nCouldn't create clip.")
+            logging.error("Couldn't create clip.")
 
     # Check if a user is banned from the channel
     def is_banned(self, viewer):
@@ -119,5 +119,5 @@ class ApiCalls:
             else:
                 return True
         except Exception as e:
-            logging.error(e, "\nUnable to check if " + viewer + " is banned from the channel.")
+            logging.error("Unable to check if " + viewer + " is banned from the channel.")
 
