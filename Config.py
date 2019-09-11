@@ -1,6 +1,4 @@
-CHANNEL_NAME = ''
+CHANNEL_NAME = 'brexbottest'
 
-HEADERS = {
-            "Client-ID": 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-            'Authorization': 'Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        }
+HEADERS = {'Authorization': 'Bearer zgi995qrovcw2zgpy6b5r1qc1zy777'}
+
