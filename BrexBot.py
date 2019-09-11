@@ -5,6 +5,8 @@ __license__ = "Apache License"
 __version__ = "2.0"
 __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
+# install missing libs by running:
+# python -m pip install --upgrade docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew kivy.deps.gstreamer --extra-index-url kivy.org/downloads/packages/simple
 
 from kivy.app import App
 from kivy.lang import Builder
