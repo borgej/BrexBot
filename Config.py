@@ -1,6 +1,6 @@
 CHANNEL_NAME = ''
 
 HEADERS = {
-            "Client-ID": 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+            "Client-ID": 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
             'Authorization': 'Bearer xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
         }
