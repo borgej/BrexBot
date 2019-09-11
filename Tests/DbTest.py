@@ -7,13 +7,15 @@ class Test(unittest.TestCase):
         # setup
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        Db().create_viewer(twitchusername, channel, -1)
+        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij")
+        dbconn.create_viewer(twitchusername, channel, -1)
 
     def test_user_exists_in_db(self):
         self.setup()
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        res = Db().viewer_exists(twitchusername, channel)
+        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij")
+        res = dbconn.viewer_exists(twitchusername, channel)
         self.cleanup()
         self.assertEqual(res, True)
 
@@ -22,10 +24,11 @@ class Test(unittest.TestCase):
         twitchusername = "IntegrationTestUser"
         points = 1000
         channel = "TestChannel"
-        current_points = Db().get_points(twitchusername, channel)
+        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij")
+        current_points = dbconn.get_points(twitchusername, channel)
         expected_points = current_points + points
-        Db().add_points(twitchusername, channel, points)
-        new_points_total = Db().get_points(twitchusername, channel)
+        dbconn.add_points(twitchusername, channel, points)
+        new_points_total = dbconn.get_points(twitchusername, channel)
         self.cleanup()
         self.assertEqual(expected_points, new_points_total)
 
@@ -34,17 +37,19 @@ class Test(unittest.TestCase):
         twitchusername = "IntegrationTestUser"
         points = 1000
         channel = "TestChannel"
-        current_points = Db().get_points(twitchusername, channel)
+        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij")
+        current_points = dbconn.get_points(twitchusername, channel)
         expected_points = current_points - points
-        Db().remove_points(twitchusername, channel, points)
-        new_points_total = Db().get_points(twitchusername, channel)
+        dbconn.remove_points(twitchusername, channel, points)
+        new_points_total = dbconn.get_points(twitchusername, channel)
         self.cleanup()
         self.assertEqual(expected_points, new_points_total)
 
     def cleanup(self):
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        Db().remove_viewer(twitchusername, channel, -1)
+        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij")
+        dbconn.remove_viewer(twitchusername, channel, -1)
 
 if __name__ == '__main__':
     unittest.main()

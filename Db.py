@@ -14,15 +14,15 @@ from mysql.connector import Error
 
 
 class Db:
-    def __init__(self):
-
+    # database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij"
+    def __init__(self, host, database, username, password, port = 3306):
         # Create a connection to the database
         self.cnx = mysql.connector.connect(
-            database="brexbot",
-            host="198.71.225.59",
-            port=3306,
-            user="brexbot",
-            password="6Ke04_ij")
+            database=database,
+            host=host,
+            port=port,
+            user=username,
+            password=password)
         
         logging.info("Connected.")
 
@@ -31,7 +31,6 @@ class Db:
 
     # Check if a user exists in the database
     def viewer_exists(self, twitchusername, channel):
-
         self.cur.execute(
             "SELECT twitchusername, COUNT(*) FROM viewer WHERE channel = %s GROUP BY twitchusername",
             (channel,))
@@ -53,7 +52,7 @@ class Db:
             self.cnx.commit()
             logging.debug("Added user " + twitchusername)
         except Error as e:
-            logging.error("Unable to create viewer.", e)
+            logging.exception("Unable to create viewer.", e)
 
     def remove_viewer(self, twitchusername, channel, twitchuserid):
         try:
@@ -62,7 +61,7 @@ class Db:
             self.cnx.commit()
             logging.debug("removed user " + twitchusername)
         except Error as e:
-            logging.error("Unable to remove viewer.", e)
+            logging.exception("Unable to remove viewer.", e)
 
     # Used to add points to all viewers currently in the chat
     def add_points(self, viewer_list, channel, points):
@@ -78,7 +77,7 @@ class Db:
             logging.debug("All points added, changes committed and database closed.")
             return True
         except Error as e:
-            logging.error("Unable to add points", e)
+            logging.exception("Unable to add points", e)
             return False
 
     # Used to remove points from a viewer / list of viewers
@@ -95,7 +94,7 @@ class Db:
             logging.debug("Points removed, changes committed and database closed.")
             return True
         except Error as e:
-            logging.error("Unable to remove points", e)
+            logging.exception("Unable to remove points", e)
             return False
 
     # Retrieve points from the database.
@@ -108,7 +107,7 @@ class Db:
             result = self.cur.fetchone()
             return result[0]
         except Error as e:
-            logging.error("Unable to retrieve points", e)
+            logging.exception("Unable to retrieve points", e)
 
     # Add a timestamp to the database when a viewer plays a game.
     def add_last_game_time(self, twitchusername, channel, game_type):
@@ -125,7 +124,7 @@ class Db:
                 self.cur.execute(sql, val)
             self.cnx.commit()
         except Error as e:
-            logging.error("Unable to set time stamp", e)
+            logging.exception("Unable to set time stamp", e)
 
     # Check database for time since last gamble (minutes)
     def time_since_last_gamble(self, twitchusername, channel):
@@ -142,7 +141,7 @@ class Db:
             print(time_in_minutes)
             return time_in_minutes
         except Error as e:
-            logging.error("Unable to retrieve time data.", e)
+            logging.exception("Unable to retrieve time data.", e)
 
     # Commit db changes
     def commit(self):
@@ -150,7 +149,7 @@ class Db:
             self.cnx.commit()
             return True
         except Error as e:
-            logging.error("Error on committing db changes: ", e)
+            logging.exception("Error on committing db changes: ", e)
             return False
 
     # Close connection
@@ -160,5 +159,5 @@ class Db:
             logging.debug("DB connection closed.")
             return True
         except Error as e:
-            logging.error("Error on closing connection: ", e)
+            logging.exception("Error on closing connection: ", e)
             return False
