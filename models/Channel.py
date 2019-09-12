@@ -10,19 +10,22 @@ class Channel():
     def __init__(self, channel, game, title, mature):
         self.channel = channel
         self.broadcaster_language = None
-        self.followers = None
         self.game = game
         self.mature = mature
         # Title of the stream
         self.status = title
 
-        self.followers = []
-        self.subscribers = []
+        # Values retrieved from API
+        self.followers = None
+        self.subscribers = None
         self.moderators = []
         self.views = None
 
-        self.banned_users = []
-
-        self.clips = []
-        self.vods = []
+        # Database channel data
+        self.media_requests = []
+        self.polls = []
+        self.quotes = []
+        self.commands = []
+        self.timers = []
+        self.banned_words = []
 
