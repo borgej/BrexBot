@@ -131,3 +131,13 @@ class TwitchApi:
                 return True
         except Exception as e:
             logging.error("Unable to check if " + viewer + " is banned from the channel.", e)
+
+    # The following functions use the Twitch V5 API and require a separate token (OAuth)
+    def update_channel(self, title, game):
+        try:
+            url = 'https://api.twitch.tv/kraken/channels/' + self.get_channel_id() + '?api_version=5'
+            headers = Config.V5HEADERS
+            data = {'channel[status]': title, 'channel[game]': game, 'channel[channel_feed_enabled]': 'true'}
+            response = requests.put(url=url, headers=headers, params=data)
+        except Exception as e:
+            logging.error('Unable to perform V5 API call', e)
