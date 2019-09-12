@@ -1,5 +1,5 @@
 import unittest
-from ApiCalls import ApiCalls
+from TwitchApi import ApiCalls
 import Config
 
 

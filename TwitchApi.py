@@ -9,7 +9,7 @@ import logging
 # The "Bearer" token must have the required scopes to perform successful API calls.
 
 
-class ApiCalls:
+class TwitchApi:
     def __init__(self, channel_name=Config.CHANNEL_NAME):
         self.channel_id = self.get_user_id(channel_name)
 

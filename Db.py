@@ -11,6 +11,7 @@ import logging
 import time
 import datetime
 from mysql.connector import Error
+import TwitchApi
 
 
 class Db:
@@ -30,7 +31,7 @@ class Db:
         self.cur = self.cnx.cursor()
 
     # Check if a user exists in the database
-    def viewer_exists(self, twitchusername, channel):
+    def viewer_exists(self, viewer, channel):
         self.cur.execute(
             "SELECT twitchusername, COUNT(*) FROM viewer WHERE channel = %s GROUP BY twitchusername",
             (channel,))
