@@ -7,10 +7,10 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 class Command():
-    def __init__(self, id, channel, command, active, response, broadcaster, mod, sub, vip, follower, viewer, cooldown = None):
+    def __init__(self, id, channel, name, active, response, broadcaster, mod, sub, vip, follower, viewer, cooldown = None, lastrun = None):
         self.id = id
         self.channel = channel
-        self.command = command
+        self.name = name
         self.active = active
         self.response = response
 
@@ -24,6 +24,7 @@ class Command():
 
         # Set universal command cool down
         self.cool_down = cooldown
+        self.lastrun = lastrun
 
     # Check if user can call command
     def can_trigger(self, stream_viewer):

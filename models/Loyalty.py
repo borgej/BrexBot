@@ -7,8 +7,11 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 class Loyalty():
-    def __init__(self, id, channel, loot_name, interval):
+    def __init__(self, id, channel, loot_name, interval, amount, sub_bonus):
         self.id = id
         self.channel = channel
         self.loot_name = loot_name
         self.interval = interval
+        self.amount = amount
+        # sub's get amount + sub bonus at each interval
+        self.sub_bonus = sub_bonus

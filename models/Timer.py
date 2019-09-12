@@ -9,12 +9,12 @@ __status__ = "Development"
 import models.Command
 
 class Timer(models.Command):
-    def __init__(self, id, channel, command, active, response, broadcaster, mod, sub, vip, follower, viewer, cooldown = None, timer_interval = None, timer_last_run = None):
+    def __init__(self, id, channel, name, active, response, broadcaster, mod, sub, vip, follower, viewer, cooldown = None, timer_interval = None, last_run = None, ):
         # Interval in minutes
         self.timer_interval = timer_interval
         # Last time timer ran
-        self.timer_last_run = timer_last_run
-        super(Timer, self).__init__(id, channel, command, active, response, broadcaster, mod, sub, vip, follower, viewer, cooldown)
+        self.last_run = last_run
+        super(Timer, self).__init__(id, channel, name, active, response, broadcaster, mod, sub, vip, follower, viewer, cooldown, last_run)
 
     # Check if user can call command
     def can_trigger(self, stream_viewer):
