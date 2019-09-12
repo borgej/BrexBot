@@ -7,8 +7,9 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 class User():
-    def __init__(self, username, channel, bot_name, bot_oauth, channel_token, created, last_active):
+    def __init__(self, username, password, channel, bot_name, bot_oauth, channel_token, created, last_active):
         self.username = username
+        self.password = password
         self.channel = channel
         self.bot_name = bot_name
         self.bot_oauth = bot_oauth

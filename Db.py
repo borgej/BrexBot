@@ -13,7 +13,7 @@ import logging
 import time
 import datetime
 from mysql.connector import Error
-from datetime import date
+from datetime import datetime
 import TwitchApi
 
 
@@ -36,20 +36,20 @@ class Db:
     # Check if a user exists in the database
     def viewer_exists(self, viewer, channel):
         self.cur.execute(
-            "SELECT twitchusername, COUNT(*) FROM viewer WHERE channel = %s GROUP BY twitchusername",
+            "SELECT viewer, COUNT(*) FROM viewer WHERE channel = %s GROUP BY viewer",
             (channel,))
 
         if self.cur.fetchone() is not None:
-            logging.debug(twitchusername + " exists in " + channel + "'s channel.")
+            logging.debug(viewer + " exists in " + channel + "'s channel.")
             return True
         else:
-            logging.debug(twitchusername + " doesn't exist in " + channel + "'s channel.")
+            logging.debug(viewer + " doesn't exist in " + channel + "'s channel.")
             return False
 
     # Add a user to the database using twitchusername and twitchuserid
     def create_viewer(self, twitchusername, channel, twitchuserid):
         try:
-            sql = "INSERT INTO viewer (twitchusername, channel, twitchuserid, points) " \
+            sql = "INSERT INTO viewer (viewer, channel, viewer_id, points) " \
                   "VALUES (%s, %s, %s, %s)"
             val = (twitchusername, channel, twitchuserid, 0)
             self.cur.execute(sql, val)
@@ -60,7 +60,7 @@ class Db:
 
     def remove_viewer(self, twitchusername, channel, twitchuserid):
         try:
-            sql = "DELETE FROM viewer where twitchuserid = " + str(twitchuserid) + " AND channel = '" + channel + "'" + " AND twitchusername = '" + twitchusername + "'"
+            sql = "DELETE FROM viewer where viewer_id = " + str(twitchuserid) + " AND channel = '" + channel + "'" + " AND viewer = '" + twitchusername + "'"
             self.cur.execute(sql)
             self.cnx.commit()
             logging.debug("removed user " + twitchusername)
@@ -74,7 +74,7 @@ class Db:
             results = self.cur.fetchall()
             for row in results:
                 if row[1] in viewer_list:
-                    sql = """UPDATE viewer SET points = %s WHERE twitchusername = %s AND channel = %s"""
+                    sql = """UPDATE viewer SET points = %s WHERE viewer = %s AND channel = %s"""
                     val = (points + row[4], row[1], channel)
                     self.cur.execute(sql, val)
             self.cnx.commit()
@@ -91,7 +91,7 @@ class Db:
             results = self.cur.fetchall()
             for row in results:
                 if row[1] in twitchusername:
-                    sql = """UPDATE viewer SET points = %s WHERE twitchusername = %s AND channel = %s"""
+                    sql = """UPDATE viewer SET points = %s WHERE viewer = %s AND channel = %s"""
                     val = (row[4] - points, row[1], channel)
                     self.cur.execute(sql, val)
             self.cnx.commit()
@@ -106,7 +106,7 @@ class Db:
     def get_points(self, twitchusername, channel):
         try:
             self.cur.execute(
-                "SELECT points FROM viewer WHERE twitchusername = %s AND channel = %s",
+                "SELECT points FROM viewer WHERE viewer = %s AND channel = %s",
                 (twitchusername, channel))
             result = self.cur.fetchone()
             return result[0]
@@ -119,11 +119,11 @@ class Db:
             ts = time.time()
             timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
             if game_type == "dice":
-                sql = """UPDATE viewer SET lastgamble = %s WHERE twitchusername = %s AND channel = %s"""
+                sql = """UPDATE viewer SET lastgamble = %s WHERE viewer = %s AND channel = %s"""
                 val = (timestamp, twitchusername, channel)
                 self.cur.execute(sql, val)
             elif game_type == "roulette":
-                sql = """UPDATE viewer SET lastroulette = %s WHERE twitchusername = %s AND channel = %s"""
+                sql = """UPDATE viewer SET lastroulette = %s WHERE viewer = %s AND channel = %s"""
                 val = (timestamp, twitchusername, channel)
                 self.cur.execute(sql, val)
             self.cnx.commit()
@@ -136,7 +136,7 @@ class Db:
             ts = time.time()
             current_time = datetime.datetime.fromtimestamp(ts)
             self.cur.execute(
-                "SELECT lastgamble FROM viewer WHERE twitchusername = %s AND channel = %s",
+                "SELECT lastgamble FROM viewer WHERE viewer = %s AND channel = %s",
                 (twitchusername, channel))
             result = self.cur.fetchone()
             last_gamble = result[0]
@@ -153,22 +153,29 @@ class Db:
     # get user from database
     # parameter: username as string
     def get_user(self, username):
+        """
+
+        :type username: username String
+        """
         try:
-            self.cur.execute("SELECT * from user WHERE username = %s", (username,))
+            self.cur.execute("SELECT * FROM app_user WHERE username = %s", (username,))
             result = self.cur.fetchone()
-            user = User(result[0], result[1], result[2], result[3], result[4], result[5], result[6])
-            logging.info("Got user: " + user.username + " from database")
+            if result is not None:
+                user = User(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7])
+                logging.info("Got user: " + user.username + " from database")
+            else:
+                user = None
             return user
         except Error as e:
             logging.exception("Error getting user: " + username)
 
     # create user in database
     # parameter: User object
-    def create_user(self, user):
+    def create_user(self, user: User):
         try:
-            sql = "INSERT INTO user (username, password, channel, bot_name, bot_oauth, channel_token, created, last_active) " \
-                  "VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (user.username, user.password, None, None, None, None, date.today(), date.today())
+            sql = "INSERT INTO app_user (username, password, channel, bot_name, bot_oauth, channel_token, created, last_active) " \
+                  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (user.username, user.password, None, None, None, None, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             res = self.cur.execute(sql, val)
             self.commit()
             logging.info("Created user: " + user.username + " in database")
@@ -178,9 +185,9 @@ class Db:
 
     # delete user from database
     # parameter: User object
-    def remove_user(self, user):
+    def remove_user(self, user: User):
         try:
-            res = self.cur.execute("DELETE FROM user where username = %s", (user.username))
+            res = self.cur.execute("DELETE FROM app_user where username = '" + user.username + "'")
             self.commit()
             logging.info("Removed user: " + user.username + " from database")
             return res
