@@ -1,3 +1,5 @@
+from models.User import User
+
 __author__ = "Børge Jakobsen, Thomas Donegan"
 __copyright__ = "Copyright 2019, Brexit boy and SaLmon king"
 __credits__ = ["Børge Jakobsen, Thomas Donegan"]
@@ -11,6 +13,7 @@ import logging
 import time
 import datetime
 from mysql.connector import Error
+from datetime import date
 import TwitchApi
 
 
@@ -144,6 +147,48 @@ class Db:
         except Error as e:
             logging.exception("Unable to retrieve time data.", e)
 
+    #####################################################################################
+    # USER functions
+    #####################################################################################
+    # get user from database
+    # parameter: username as string
+    def get_user(self, username):
+        try:
+            self.cur.execute("SELECT * from user WHERE username = %s", (username,))
+            result = self.cur.fetchone()
+            user = User(result[0], result[1], result[2], result[3], result[4], result[5], result[6])
+            logging.info("Got user: " + user.username + " from database")
+            return user
+        except Error as e:
+            logging.exception("Error getting user: " + username)
+
+    # create user in database
+    # parameter: User object
+    def create_user(self, user):
+        try:
+            sql = "INSERT INTO user (username, password, channel, bot_name, bot_oauth, channel_token, created, last_active) " \
+                  "VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            val = (user.username, user.password, None, None, None, None, date.today(), date.today())
+            res = self.cur.execute(sql, val)
+            self.commit()
+            logging.info("Created user: " + user.username + " in database")
+            return res
+        except Error as e:
+            logging.exception("Error creating user: " + user.username)
+
+    # delete user from database
+    # parameter: User object
+    def remove_user(self, user):
+        try:
+            res = self.cur.execute("DELETE FROM user where username = %s", (user.username))
+            self.commit()
+            logging.info("Removed user: " + user.username + " from database")
+            return res
+        except Error as e:
+            logging.exception("Error deleting user: " + user.username)
+
+    #####################################################################################
+    # Helper functions
     # Commit db changes
     def commit(self):
         try:

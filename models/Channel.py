@@ -7,13 +7,13 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 class Channel():
-    def __init__(self, channel, game, title, mature):
+    def __init__(self, channel):
         self.channel = channel
         self.broadcaster_language = None
-        self.game = game
-        self.mature = mature
+        self.game = None
+        self.mature = None
         # Title of the stream
-        self.status = title
+        self.status = None
 
         # Values retrieved from API
         self.followers = None
@@ -28,4 +28,5 @@ class Channel():
         self.commands = []
         self.timers = []
         self.banned_words = []
+
 
