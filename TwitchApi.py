@@ -24,7 +24,7 @@ class TwitchApi:
             logging.error("Error parsing JSON data.", e)
 
     # Get the ID of a given username
-    def get_user_id(self, username=Config.CHANNEL_NAME):
+    def get_user_id(self,username =Config.CHANNEL_NAME):
         try:
             url = 'https://api.twitch.tv/helix/users?login=' + username
             user_data = self.json_data(url, username)
@@ -39,7 +39,6 @@ class TwitchApi:
             url = 'https://api.twitch.tv/helix/users?login=' + username
             user_data = self.json_data(url, username)
             user = user_data['data'][0]
-            print(user)
             return user
         except Exception as e:
             logging.error("Unable to retrieve the data for " + username, e)
@@ -90,7 +89,7 @@ class TwitchApi:
     # Check if a specified user is following the channel
     def is_follower(self, viewer):
         try:
-            viewer_id =  self.get_user_id(viewer)
+            viewer_id = self.get_user_id(viewer)
             url = 'https://api.twitch.tv/helix/users/follows?to_id=' + self.channel_id + '&from_id=' + viewer_id
             follow_data = self.json_data(url)
             if follow_data['total'] == 0:
@@ -116,6 +115,7 @@ class TwitchApi:
         try:
             url = 'https://api.twitch.tv/helix/clips?broadcaster_id=' + self.channel_id
             clip_data = self.json_data(url)
+            return clip_data
         except Exception as e:
             logging.error("Couldn't create clip.", e)
 

@@ -2,6 +2,7 @@ import unittest
 import mysql.connector
 from Db import Db
 
+
 class Test(unittest.TestCase):
     def setup(self):
         # setup

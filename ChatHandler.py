@@ -80,3 +80,4 @@ class ChatHandler():
             self.chat_connection.send(message)
         except Exception as e:
             self.logger.exception("Error sending chat message: " + message)
+
