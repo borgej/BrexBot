@@ -12,14 +12,16 @@ import pprint
 import urllib
 import urllib.request
 import urllib.parse
+import Config
 from models.MediaRequest import MediaRequest
+
 
 logging.basicConfig(level=logging.DEBUG)
 
 # Media request handler to search for video/songrequests on YouTube
 class MediaRequestHandler():
     def __init__(self):
-        self.api_key = "AIzaSyBKpwIdN7OFlEXYvqGkkLBiBT4x0vIEkrU"
+        self.api_key = Config.YOUTUBE_KEY
 
     def search_request(self, request: MediaRequest):
         try:
