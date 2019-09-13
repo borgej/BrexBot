@@ -6,6 +6,9 @@ __version__ = "2.0"
 __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
+from TwitchApi import TwitchApi
+
+
 class Channel():
     def __init__(self, channel):
         self.channel = channel
@@ -28,5 +31,13 @@ class Channel():
         self.commands = []
         self.timers = []
         self.banned_words = []
+
+        self.dbconn = Db()
+        self.api = TwitchApi(self.channel)
+
+    # load channel data from TwitchAPI and Database
+    def load(self):
+        self.followers = self.api.get_followers().count()
+        self.moderators = self.api.get_moderators()
 
 

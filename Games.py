@@ -10,6 +10,7 @@ import random
 from Db import Db
 import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 class Roulette:
     def __init__(self, user):

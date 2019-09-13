@@ -16,6 +16,7 @@ from mysql.connector import Error
 from datetime import datetime
 import TwitchApi
 
+logging.basicConfig(level=logging.DEBUG)
 
 class Db:
     # database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij"

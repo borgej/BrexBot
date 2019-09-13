@@ -9,6 +9,7 @@ __status__ = "Development"
 import twitch
 import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 class ChatHandler():
     def __init__(self, channelname, nickname, oauth, commands = None, triggers = None, polls = None, banned_words = None):

@@ -7,7 +7,7 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 class MediaRequest():
-    def __init__(self, id, channel, title, video_id, url, requested_by, created, length = None, deleted = None):
+    def __init__(self, title, id = None, channel = None, video_id = None, url = None, requested_by = None, created = None, length = None, deleted = None):
         self.id = id
         self.channel_id = channel
         self.title = title
