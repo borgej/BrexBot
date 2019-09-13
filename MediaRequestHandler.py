@@ -17,10 +17,6 @@ from models.MediaRequest import MediaRequest
 logging.basicConfig(level=logging.DEBUG)
 
 # Media request handler to search for video/songrequests on YouTube
-# TODO: - Add tests
-#       - Get title from chosen result
-#       - Get number of views from chosen result
-#       - Get length of video
 class MediaRequestHandler():
     def __init__(self):
         self.api_key = "AIzaSyBKpwIdN7OFlEXYvqGkkLBiBT4x0vIEkrU"
