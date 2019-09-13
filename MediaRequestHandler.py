@@ -7,16 +7,12 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 import logging
-import os
 import urllib.request
 import urllib.parse
 import re
-import Config
 import requests
 import pprint
 from lxml import html
-from youtube3 import YoutubeClient
-from oauth2client.tools import argparser
 from models.MediaRequest import MediaRequest
 
 logging.basicConfig(level=logging.DEBUG)
