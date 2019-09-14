@@ -23,6 +23,23 @@ class Test(unittest.TestCase):
         self.assertEqual(exists_now.username, user.username)
         self.cleanup()
 
+    def test_verify_user(self):
+        username = "normaltwitchuser@twitch.tv"
+        password = "BobsYourUncle"
+        dbconn = Db()
+
+        now = datetime.now()
+        formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+
+        user = User(username, password, "testchannel", "testbot", "testbotOAuth", "channelToken", formatted_date,
+                    formatted_date)
+        dbconn.create_user(user)
+        verified_user = dbconn.verify_user(user.username, user.password)
+
+        dbconn.remove_user(user)
+        self.assertEqual(user.username, verified_user.username)
+        self.cleanup()
+
     def test_get_user(self):
         username = "normaltwitchuser@twitch.tv"
         dbconn = Db()

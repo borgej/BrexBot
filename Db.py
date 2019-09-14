@@ -13,9 +13,10 @@ import logging
 import time
 import datetime
 import Config
+import TwitchApi
+from passlib.hash import pbkdf2_sha256
 from mysql.connector import Error
 from datetime import datetime
-import TwitchApi
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -171,13 +172,28 @@ class Db:
         except Error as e:
             logging.exception("Error getting user: " + username)
 
+    # verify user for login
+    def verify_user(self, username, password):
+        try:
+            user = self.get_user(username)
+            verify = self.verify_password(password, user.password)
+            if(verify):
+                logging.info("Login info verified for: " + user.username)
+                return user
+            else:
+                logging.info("Wrong password for user: " + user.username)
+                return None
+        except Exception as e:
+            logging.exception("Error in verify_user(): " + username)
+            return None
+
     # create user in database
     # parameter: User object
     def create_user(self, user: User):
         try:
             sql = "INSERT INTO app_user (username, password, channel, bot_name, bot_oauth, channel_token, created, last_active) " \
                   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            val = (user.username, user.password, None, None, None, None, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            val = (user.username, self.hash_password(user.password), None, None, None, None, datetime.now().strftime('%Y-%m-%d %H:%M:%S'), datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             res = self.cur.execute(sql, val)
             self.commit()
             logging.info("Created user: " + user.username + " in database")
@@ -231,6 +247,13 @@ class Db:
 
     #####################################################################################
     # Helper functions
+
+    def hash_password(self, password):
+        return pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
+
+    def verify_password(self, password, password_hash):
+        return pbkdf2_sha256.verify(password, password_hash)
+
     # Commit db changes
     def commit(self):
         try:
