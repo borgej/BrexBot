@@ -227,22 +227,27 @@ class Db:
     # Media Functions
     #####################################################################################
 
-    def load_media(self, _id, channel):
-        sql = 'SELECT * FROM media_request WHERE id = ' + str(_id) + ' AND channel = \"' + channel + '\"'
+    def load(self, method_type, _id, channel=Config.CHANNEL_NAME):
+        sql = 'SELECT * FROM ' + method_type + ' WHERE id = \"' + str(_id) + '\" AND channel = \"' + channel + '\"'
         self.cur.execute(sql)
         return self.cur.fetchone()
 
-    def load_all(self, channel):
-        sql = 'SELECT * FROM media_request WHERE channel = \"' + channel + '\"'
+    def load_all(self, model_type, channel=Config.CHANNEL_NAME):
+        sql = 'SELECT * FROM ' + model_type + ' WHERE channel = \"' + channel + '\"'
         self.cur.execute(sql)
         return self.cur.fetchall()
 
-    def save_media(self, keys, values):
-        self.cur.execute("INSERT INTO media_request (" + keys + ") VALUES (" + values + ")")
+    # def load_all_media(self, channel=Config.CHANNEL_NAME, model_type):
+    #     sql = 'SELECT * FROM media_request WHERE channel = \"' + channel + '\"'
+    #     self.cur.execute(sql)
+    #     return self.cur.fetchall()
+
+    def save(self, method_type, keys, values):
+        self.cur.execute("INSERT INTO " + method_type + " (" + keys + ") VALUES (" + values + ")")
         self.commit()
 
-    def delete_media(self, _id):
-        self.cur.execute("DELETE FROM media_request where id = '" + _id + "'")
+    def delete(self, method_type, _id, channel=Config.CHANNEL_NAME):
+        self.cur.execute("DELETE FROM " + method_type + " WHERE id = '" + str(_id) + "' and channel = '" + channel + "'")
         self.commit()
 
     #####################################################################################
