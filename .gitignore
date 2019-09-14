@@ -103,3 +103,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 /client_secrets.json
+/data/screens/view.qml

@@ -1,3 +1,4 @@
+#!/usr/bin/python
 __author__ = "Børge Jakobsen, Thomas Donegan"
 __copyright__ = "Copyright 2019, Brexit boy and SaLmon king"
 __credits__ = ["Børge Jakobsen, Thomas Donegan"]
@@ -5,113 +6,96 @@ __license__ = "Apache License"
 __version__ = "2.0"
 __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
-# install missing libs by running:
-# python -m pip install --upgrade docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew kivy.deps.gstreamer --extra-index-url kivy.org/downloads/packages/simple
 
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
+import sys
+import logging
+from Db import Db
+from PySide2.QtWidgets import (QLineEdit, QPushButton, QApplication,
+    QVBoxLayout, QDialog, QGridLayout, QLabel, QStyle)
 
+class LoginForm(QDialog):
 
-class CreateAccountWindow(Screen):
-    namee = ObjectProperty(None)
-    email = ObjectProperty(None)
-    password = ObjectProperty(None)
+    def __init__(self, parent=None):
+        super(LoginForm, self).__init__(parent)
+        # TODO: try catch db conn init, raise statusline error on no-connect
+        self.dbconn = Db()
+        self.setFixedSize(300, 200)
 
-    def submit(self):
-        if self.namee.text != "" and self.email.text != "" and self.email.text.count("@") == 1 and self.email.text.count(".") > 0:
-            if self.password != "":
-                db.add_user(self.email.text, self.password.text, self.namee.text)
+        # get fonts
+        self.input_font = QLineEdit("").font()
+        self.input_font.setPointSize(14)
+        self.label_font = QLabel("").font()
+        self.label_font.setPointSize(12)
 
-                self.reset()
+        # Create widgets
+        self.username_label = QLabel("Username")
+        self.username_label.setFont(self.label_font)
+        self.username = QLineEdit("")
+        self.username.setMinimumHeight(30)
+        self.username.setFont(self.input_font)
 
-                sm.current = "login"
+        self.password_label = QLabel("Password")
+        self.password_label.setFont(self.label_font)
+        self.password = QLineEdit("")
+        self.password.setMinimumHeight(30)
+        self.password.setEchoMode(QLineEdit.Password)
+        self.password.setFont(self.input_font)
+
+        self.password2_label = QLabel("Confirm Password")
+        self.password2_label.setFont(self.label_font)
+        self.password2 = QLineEdit("Confirm password")
+        self.password2.setMinimumHeight(30)
+        self.password2.setFont(self.input_font)
+
+        self.login_button = QPushButton("Login")
+        self.login_button.setMinimumHeight(30)
+        self.login_button.setFont(self.label_font)
+        self.create_user_button = QPushButton("New user?")
+        self.create_user_button.setFont(self.label_font)
+        self.create_user_button.setMinimumHeight(30)
+        self.create_user_button.setFlat(True)
+
+        # Create layout and add widgets
+        layout = QGridLayout()
+
+        layout.addWidget(self.username_label)
+        layout.addWidget(self.username)
+
+        layout.addWidget(self.password_label)
+        layout.addWidget(self.password)
+
+        # TODO: add spacer thingymajingy
+        layout.addWidget(self.login_button)
+        layout.addWidget(self.create_user_button)
+
+        # Set dialog layout
+        self.setLayout(layout)
+        # Add button signal to greetings slot
+        self.login_button.clicked.connect(self.try_login)
+
+    def try_login(self):
+        try:
+            if(self.dbconn.verify_user(self.username.text(), self.password.text())):
+                logging.debug("User: " + self.username.text() + " verified and logged in!")
             else:
-                invalidForm()
-        else:
-            invalidForm()
+                logging.debug("User: " + self.username.text() + " verify failed")
+        except Exception as e:
+            logging.exception("Error on verifying user:", e)
 
-    def login(self):
-        self.reset()
-        sm.current = "login"
+    # Greets the user
+    def log(self):
+        try:
+            logging.debug("User: " + self.username + " trying to log in")
+        except Exception as e:
+            logging.exception("No username typed")
 
-    def reset(self):
-        self.email.text = ""
-        self.password.text = ""
-        self.namee.text = ""
+if __name__ == '__main__':
+    # Create the Qt Application
+    app = QApplication(sys.argv)
 
-
-class LoginWindow(Screen):
-    email = ObjectProperty(None)
-    password = ObjectProperty(None)
-
-    def loginBtn(self):
-        if db.validate(self.email.text, self.password.text):
-            MainWindow.current = self.email.text
-            self.reset()
-            sm.current = "main"
-        else:
-            invalidLogin()
-
-    def createBtn(self):
-        self.reset()
-        sm.current = "create"
-
-    def reset(self):
-        self.email.text = ""
-        self.password.text = ""
-
-
-class MainWindow(Screen):
-    n = ObjectProperty(None)
-    created = ObjectProperty(None)
-    email = ObjectProperty(None)
-    current = ""
-
-    def logOut(self):
-        sm.current = "login"
-
-    def on_enter(self, *args):
-        password, name, created = db.get_user(self.current)
-        self.n.text = "Account Name: " + name
-        self.email.text = "Email: " + self.current
-        self.created.text = "Created On: " + created
-
-
-class WindowManager(ScreenManager):
-    pass
-
-def invalidLogin():
-    pop = Popup(title='Invalid Login',
-                  content=Label(text='Invalid username or password.'),
-                  size_hint=(None, None), size=(400, 400))
-    pop.open()
-
-
-def invalidForm():
-    pop = Popup(title='Invalid Form',
-                  content=Label(text='Please fill in all inputs.'),
-                  size_hint=(None, None), size=(400, 400))
-    pop.open()
-
-kv = Builder.load_file("data/screens/layout.kv")
-
-sm = WindowManager()
-
-screens = [LoginWindow(name="login"), CreateAccountWindow(name="create"),MainWindow(name="main")]
-for screen in screens:
-    sm.add_widget(screen)
-
-sm.current = "login"
-
-
-class BrexBot(App):
-    def build(self):
-        return sm
-
-
-if __name__ == "__main__":
-    BrexBot().run()
+    # Create and show the form
+    form = LoginForm()
+    form.setWindowTitle("BrexBot")
+    form.show()
+    # Run the main Qt loop
+    sys.exit(app.exec_())
