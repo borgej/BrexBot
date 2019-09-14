@@ -44,8 +44,9 @@ class MediaRequestHandler():
             logging.debug("Selected " + request.title + " with url " + request.url)
 
             return request
-        except:
-            logging.exception("Exception in search call to YouTube ")
+
+        except Exception as e:
+            logging.exception("Exception in search call to YouTube ", e)
             return None
 
     def get_video_details(self, request: MediaRequest):
@@ -71,7 +72,8 @@ class MediaRequestHandler():
             logging.debug("Video id: " + request.video_id + " gave this data: title: " + request.title + " length: " + request.length )
 
             return request
-        except:
-            logging.exception("Exception in get_video call to YouTube")
+
+        except Exception as e:
+            logging.exception("Exception in get_video call to YouTube ", e)
             return None
 

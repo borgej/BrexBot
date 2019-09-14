@@ -7,10 +7,12 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 from TwitchApi import TwitchApi
+from Db import Db
+import Config
 
 
 class Channel():
-    def __init__(self, channel):
+    def __init__(self, channel = Config.CHANNEL_NAME):
         self.channel = channel
         self.broadcaster_language = None
         self.game = None
@@ -32,12 +34,10 @@ class Channel():
         self.timers = []
         self.banned_words = []
 
-        self.dbconn = Db()
+        self.dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
         self.api = TwitchApi(self.channel)
 
     # load channel data from TwitchAPI and Database
     def load(self):
         self.followers = self.api.get_followers().count()
         self.moderators = self.api.get_moderators()
-
-

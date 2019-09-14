@@ -74,6 +74,7 @@ class TwitchApi:
             logging.error("Could not retrieve Follower list for the channel", e)
 
     # Check if a specified user is a moderator in the channel
+    # TODO: else: return True is broken, needs fix. Returns is_mod == True for non mods
     def is_moderator(self, viewer):
         try:
             viewer_id = self.get_user_id(viewer)
@@ -84,7 +85,7 @@ class TwitchApi:
             else:
                 return True
         except Exception as e:
-            logging.error("Unable to determin if " + viewer + " is a moderator.", e)
+            logging.error("Unable to determine if " + viewer + " is a moderator.", e)
 
     # Check if a specified user is following the channel
     def is_follower(self, viewer):
@@ -93,13 +94,14 @@ class TwitchApi:
             url = 'https://api.twitch.tv/helix/users/follows?to_id=' + self.channel_id + '&from_id=' + viewer_id
             follow_data = self.json_data(url)
             if follow_data['total'] == 0:
-                return None
+                return False
             else:
-                return follow_data['data'][0]['followed_at']
+                return True
         except Exception as e:
-            logging.error("Unable to determin if " + viewer + " is following the channel.", e)
+            logging.error("Unable to determine if " + viewer + " is following the channel.", e)
 
     # Check if a viewer is subscribed to teh channel
+    # TODO: Needs to return True/False
     def is_subscriber(self, viewer):
         try:
             viewer_id = self.get_user_id(viewer)
@@ -132,6 +134,19 @@ class TwitchApi:
         except Exception as e:
             logging.error("Unable to check if " + viewer + " is banned from the channel.", e)
 
+    # Get followed channel since date
+    def follower_since(self, viewer):
+        try:
+            viewer_id = self.get_user_id(viewer)
+            url = 'https://api.twitch.tv/helix/users/follows?to_id=' + self.channel_id + '&from_id=' + viewer_id
+            follow_data = self.json_data(url)
+            if follow_data['total'] == 0:
+                return None
+            else:
+                return follow_data['data'][0]['followed_at']
+        except Exception as e:
+            logging.error("Unable to determine if " + viewer + " is following the channel.", e)
+
     # The following functions use the Twitch V5 API and require a separate token (OAuth)
     def update_channel(self, title, game):
         try:
@@ -139,5 +154,7 @@ class TwitchApi:
             headers = Config.V5HEADERS
             data = {'channel[status]': title, 'channel[game]': game, 'channel[channel_feed_enabled]': 'true'}
             response = requests.put(url=url, headers=headers, params=data)
+            return response
         except Exception as e:
             logging.error('Unable to perform V5 API call', e)
+            return None
