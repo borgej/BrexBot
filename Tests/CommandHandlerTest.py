@@ -21,6 +21,21 @@ class CommandHandlerTest(unittest.TestCase):
         self.assertEqual(commandname, commandres.name)
         self.assertEqual(True, can_trigger)
 
+    def test_command_exists_and_is_triggered_by_broadcaster(self):
+        command = "!social"
+        commandname = "social"
+        message = Message(command, Config.CHANNEL_NAME)
+        channel = Channel(Config.CHANNEL_NAME)
+        channel.commands.append(
+            Command(-1, Config.CHANNEL_NAME, "social", True, "Join my Discord at www.discord.com", True, False, False,
+                    False, False, False, None, None))
+        commandhandler = CommandHandler(channel)
+
+        commandres, can_trigger = commandhandler.is_command_triggered(message)
+
+        self.assertEqual(commandname, commandres.name)
+        self.assertEqual(True, can_trigger)
+
     def test_command_exists_is_not_active_and_is_not_triggered(self):
         command = "!social"
         commandname = "social"
