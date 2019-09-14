@@ -8,7 +8,7 @@ from datetime import datetime
 class Test(unittest.TestCase):
     def test_create_user(self):
         username = "normaltwitchuser@twitch.tv"
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
 
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
@@ -25,7 +25,7 @@ class Test(unittest.TestCase):
 
     def test_get_user(self):
         username = "normaltwitchuser@twitch.tv"
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
 
         now = datetime.now()
         now = now.replace(microsecond=0)
@@ -40,7 +40,7 @@ class Test(unittest.TestCase):
 
     def test_remove_user(self):
         username = "normaltwitchuser@twitch.tv"
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
 
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
     def test_viewer_exists_in_db(self):
         twitchusername = "IntegrationTestUser"
         channel = "TestChannel"
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
         dbconn.create_viewer(twitchusername, channel, -1)
 
         res = dbconn.viewer_exists(twitchusername, channel)
@@ -72,7 +72,7 @@ class Test(unittest.TestCase):
         twitchusername = "IntegrationTestUser"
         points = 1000
         channel = "TestChannel"
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
         dbconn.create_viewer(twitchusername, channel, -1)
 
         current_points = dbconn.get_points(twitchusername, channel)
@@ -87,7 +87,7 @@ class Test(unittest.TestCase):
         twitchusername = "IntegrationTestUser"
         points = 1000
         channel = "TestChannel"
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
         dbconn.create_viewer(twitchusername, channel, -1)
 
         current_points = dbconn.get_points(twitchusername, channel)
@@ -105,7 +105,7 @@ class Test(unittest.TestCase):
         now = datetime.now()
         formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 
-        dbconn = Db(database="brexbot", host="198.71.225.59", port=3306, username="brexbot", password="6Ke04_ij")
+        dbconn = Db()
         dbconn.remove_viewer(twitchusername, channel, -1)
         user = User(username, "userpassword", "testchannel", "testbot", "testbotOAuth", "channelToken", formatted_date,
                     formatted_date)

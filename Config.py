@@ -12,3 +12,15 @@ V5HEADERS = {'Client-ID': 'l44o7p935j7sjo0snafzl1grjf68l2', 'Authorization': 'OA
 YOUTUBE_KEY = "AIzaSyBKpwIdN7OFlEXYvqGkkLBiBT4x0vIEkrU"
 
 COMMAND_PREFIX = "!"
+
+# Database Login
+
+DATABASE = "brexbot"
+
+HOST = "198.71.225.59"
+
+PORT = 3306
+
+USERNAME = "brexbot"
+
+PASSWORD = "6Ke04_ij"

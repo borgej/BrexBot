@@ -12,6 +12,7 @@ import mysql.connector
 import logging
 import time
 import datetime
+import Config
 from mysql.connector import Error
 from datetime import datetime
 import TwitchApi
@@ -20,7 +21,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Db:
     # database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij"
-    def __init__(self, host, database, username, password, port = 3306):
+    def __init__(self, host=Config.HOST, database=Config.DATABASE, username=Config.USERNAME, password=Config.PASSWORD, port=Config.PORT):
         # Create a connection to the database
         self.cnx = mysql.connector.connect(
             database=database,
@@ -205,6 +206,28 @@ class Db:
             return res
         except Error as e:
             logging.exception("Error deleting user: " + user.username)
+
+    #####################################################################################
+    # Media Functions
+    #####################################################################################
+
+    def load_media(self, _id, channel):
+        sql = 'SELECT * FROM media_request WHERE id = ' + str(_id) + ' AND channel = \"' + channel + '\"'
+        self.cur.execute(sql)
+        return self.cur.fetchone()
+
+    def load_all(self, channel):
+        sql = 'SELECT * FROM media_request WHERE channel = \"' + channel + '\"'
+        self.cur.execute(sql)
+        return self.cur.fetchall()
+
+    def save_media(self, keys, values):
+        self.cur.execute("INSERT INTO media_request (" + keys + ") VALUES (" + values + ")")
+        self.commit()
+
+    def delete_media(self, _id):
+        self.cur.execute("DELETE FROM media_request where id = '" + _id + "'")
+        self.commit()
 
     #####################################################################################
     # Helper functions
