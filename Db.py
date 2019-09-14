@@ -189,6 +189,17 @@ class Db:
     def remove_user(self, user: User):
         try:
             res = self.cur.execute("DELETE FROM app_user where username = '" + user.username + "'")
+
+            # delete all other channel data in all tables
+            if(user.channel != None):
+                self.cur.execute("DELETE FROM command where channel = '" + user.channel + "'")
+                self.cur.execute("DELETE FROM giveaway where channel = '" + user.channel + "'")
+                self.cur.execute("DELETE FROM media_request where channel = '" + user.channel + "'")
+                self.cur.execute("DELETE FROM loyalty where channel = '" + user.channel + "'")
+                self.cur.execute("DELETE FROM poll where channel = '" + user.channel + "'")
+                self.cur.execute("DELETE FROM quote where channel = '" + user.channel + "'")
+                self.cur.execute("DELETE FROM viewer where channel = '" + user.channel + "'")
+                
             self.commit()
             logging.info("Removed user: " + user.username + " from database")
             return res
