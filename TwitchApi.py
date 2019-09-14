@@ -74,13 +74,12 @@ class TwitchApi:
             logging.error("Could not retrieve Follower list for the channel", e)
 
     # Check if a specified user is a moderator in the channel
-    # TODO: else: return True is broken, needs fix. Returns is_mod == True for non mods
     def is_moderator(self, viewer):
         try:
             viewer_id = self.get_user_id(viewer)
             url = 'https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=' + self.channel_id + '&user_id=' + viewer_id
             moderator_data = self.json_data(url)
-            if moderator_data is None:
+            if moderator_data['data'] is None:
                 return False
             else:
                 return True

@@ -20,7 +20,7 @@ class TestApiCalls(unittest.TestCase):
 
     def test_get_moderators(self):
         self.test_moderators = TwitchApi().get_moderators()
-        self.assertEqual(self.test_moderators, None)
+        self.assertEqual(self.test_moderators, ['ToMiSmE'])
 
     # The below also tests the "get_moderator" function.
     def test_is_moderator(self):
@@ -28,6 +28,10 @@ class TestApiCalls(unittest.TestCase):
         first_moderator = moderators[0]
         test_is_moderator = TwitchApi().is_moderator(first_moderator)
         self.assertEqual(test_is_moderator, True)
+
+    def test_is_not_moderator(self):
+        test_is_moderator = TwitchApi().is_moderator("BeeJeey")
+        self.assertEqual(test_is_moderator, False)
 
     # The below also tests the "get_followers" function.
     def test_is_follower(self):

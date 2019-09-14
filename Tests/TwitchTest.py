@@ -23,11 +23,3 @@ class TwitchTest:
         print(is_subscribed)
         #return self.client.users.check_subscribed_to_channel(viewer_id, channel_id)
 
-
-con = TwitchTests()
-#con.user_follows()
-channelId = con.get_id("beejeey")
-channelInfo = con.client.channels.get_followers(channelId, 100, 0, None)
-print(channelInfo)
-
-con.check_if_subscribed("tomisme", "beejeey")
