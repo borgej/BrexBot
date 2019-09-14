@@ -7,9 +7,11 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 from Db import Db
+import Config
+
 
 class MediaRequest():
-    def __init__(self, title=None, id = None, channel = None, video_id = None, url = None, requested_by = None, created = None, length = None, thumbnail_url = None, deleted = None):
+    def __init__(self, title=None, id = None, channel = Config.CHANNEL_NAME, video_id = None, url = None, requested_by = None, created = None, length = None, thumbnail_url = None, deleted = None):
         self.id = id
         self.channel = channel
         self.title = title
@@ -21,8 +23,24 @@ class MediaRequest():
         self.thumbnail_url = thumbnail_url
         self.deleted = deleted
 
-    def load(self, _id, channel):
-        media_data = Db().load_media(_id, channel)
+    def exists(self, search_data):
+        # Gather all media data from database
+        # and convert its values in to a list
+        media_check = Db().load_all('media_request')
+        request_data = list(search_data.__dict__.values())
+
+        # For every list created, check if the channel name "request_data[1]"
+        # and the video_id "request_data[3]" match that of the request.
+        for i in media_check:
+            if i[1] == request_data[1] and i[3] == request_data[3]:
+                # If the request is already stored, load the request.
+                return MediaRequest().load(request_data[1], request_data[3])
+            else:
+                continue
+        return None
+
+    def load(self, channel, _id):
+        media_data = Db().load('media_request', _id, channel)
         self.id = media_data[0]
         self.channel = media_data[1]
         self.title = media_data[2]
@@ -35,18 +53,19 @@ class MediaRequest():
         self.deleted = media_data[9]
         return self
 
-    def save(self, media_request):
+    def save(self):
         # Create one variable to hold the keys of media_request dictionary
         # and one to hold the values.
-        object_keys = str(media_request.__dict__.keys()).replace("'", "")
-        object_values = str(media_request.__dict__.values()).replace("None", "'None'")
+        object_keys = str(self.__dict__.keys()).replace("'", "")
+        object_values = str(self.__dict__.values()).replace("None", "'None'")
 
         # Trim both of the above variables to make them suitable to pass
         # into the SQL function
         trim_keys = object_keys[11:-2]
         trim_values = object_values[13:-2]
-        Db().save_media(trim_keys, trim_values)
+        Db().save('media_request', trim_keys, trim_values)
+        return self
 
-    def delete(self, media_request):
-        request_id = str(media_request.__dict__.values())[13:14]
-        Db().delete_media(request_id)
+    def delete(self):
+        request_id = str(self.__dict__.values())[13:14]
+        Db().delete('media_request', request_id)
