@@ -1,3 +1,5 @@
+VERSION = "v0.1 Alpha"
+
 CHANNEL_NAME = 'brexbottest'
 
 # HELIX API Bearer Token (New Twitch API)
