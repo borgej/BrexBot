@@ -227,23 +227,19 @@ class Db:
     # Media Functions
     #####################################################################################
 
-    def load(self, method_type, _id, channel=Config.CHANNEL_NAME):
+    def load_by_id(self, method_type, _id, channel=Config.CHANNEL_NAME):
         sql = 'SELECT * FROM ' + method_type + ' WHERE id = \"' + str(_id) + '\" AND channel = \"' + channel + '\"'
         self.cur.execute(sql)
         return self.cur.fetchone()
 
-    def load_all(self, model_type, channel=Config.CHANNEL_NAME):
-        sql = 'SELECT * FROM ' + model_type + ' WHERE channel = \"' + channel + '\"'
+    def load_all(self, method_type, channel=Config.CHANNEL_NAME):
+        sql = 'SELECT * FROM ' + method_type + ' WHERE channel = \"' + channel + '\"'
         self.cur.execute(sql)
         return self.cur.fetchall()
 
-    # def load_all_media(self, channel=Config.CHANNEL_NAME, model_type):
-    #     sql = 'SELECT * FROM media_request WHERE channel = \"' + channel + '\"'
-    #     self.cur.execute(sql)
-    #     return self.cur.fetchall()
-
-    def save(self, method_type, keys, values):
-        self.cur.execute("INSERT INTO " + method_type + " (" + keys + ") VALUES (" + values + ")")
+    def save(self, method_type, value_list):
+        sql = ('INSERT INTO ' + method_type + ' VALUES (' + value_list + ')')
+        self.cur.execute(sql)
         self.commit()
 
     def delete(self, method_type, _id, channel=Config.CHANNEL_NAME):

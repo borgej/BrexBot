@@ -76,5 +76,3 @@ class MediaRequestHandler():
         except Exception as e:
             logging.exception("Exception in get_video call to YouTube ", e)
             return None
-
-
