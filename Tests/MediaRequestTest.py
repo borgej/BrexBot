@@ -27,7 +27,7 @@ class MediaRequestTest(unittest.TestCase):
 
         self.assertIsNotNone(song_request)
         self.assertIsNotNone(song_request.title)
-        self.assertIsNotNone(song_request.length)
+        self.assertEqual(829, song_request.length)
 
     # Test requires a database connection
     def test_load(self):

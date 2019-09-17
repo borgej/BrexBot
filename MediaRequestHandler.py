@@ -8,7 +8,7 @@ __status__ = "Development"
 
 import logging
 import json
-import pprint
+import re
 import urllib
 import urllib.request
 import urllib.parse
@@ -67,9 +67,20 @@ class MediaRequestHandler():
 
             request.title = contentDetails['title']
             request.thumbnail_url = contentDetails['thumbnails']['default']['url']
-            request.length = length['duration']
 
-            logging.debug("Video id: " + request.video_id + " gave this data: title: " + request.title + " length: " + request.length )
+            match = re.match(r"^\D+(\d+)M(\d+)S", length['duration'])
+            minutes = 0
+            seconds = 0
+
+            if (len(match.groups()) > 1):
+                minutes = match.group(1)
+                seconds = match.group(2)
+
+            minsAndSeconds = int(seconds) + (int(minutes) * 60)
+
+            request.length = minsAndSeconds
+
+            logging.debug("Video id: " + request.video_id + " gave this data: title: " + request.title + " length: " + str(request.length) )
 
             return request
 
