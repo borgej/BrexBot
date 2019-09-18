@@ -30,10 +30,6 @@ class MediaRequestTest(unittest.TestCase):
         self.assertIsNotNone(song_request.length)
 
     # Test requires a database connection
-    def test_load(self):
-        media = MediaRequest(id=1, channel='brexbottest').load()
-        self.assertIsNotNone(media.video_id)
-
     def test_exist(self):
         media = MediaRequest(id=1, title=None).exists()
         self.assertEqual(media, True)

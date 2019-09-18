@@ -25,14 +25,20 @@ class Viewer(TwitchApi):
         self.last_roulette = last_roulette
         self.is_follower = self.is_follower(viewer)
         self.is_moderator = self.is_moderator(viewer)
-        self.is_subscriber = is_subscriber #self.is_subscriber(viewer)
+        self.is_subscriber = self.is_subscriber(viewer)
         self.is_broadcaster = self.viewer == self.channel
 
-    def exists(self):
-        media_check = Db().load_all('viewer')
-        request_data = list(self.__dict__.values())
+    def filter_values(self):
+        values_list = self.__dict__
+        for i in list(values_list):
+            if i.startswith('_'):
+                del values_list[i]
+        return values_list
 
-        for i in media_check:
+    def exists(self):
+        db_data = Db().load_all('viewer')
+        request_data = list(self.filter_values().values())
+        for i in db_data:
             if i[0] == request_data[0] and i[2] == request_data[2]:
                 return True
             else:
@@ -40,18 +46,18 @@ class Viewer(TwitchApi):
         return None
 
     def load(self):
-        loyalty_data = Db().load_all('viewer', self.channel)
-        current_status = self.__dict__
+        data = Db().load_by_id('viewer', self.id, self.channel)
+        current_status = self.filter_values()
         for key, value in enumerate(current_status):
-            current_status[value] = loyalty_data[key]
+            current_status[value] = data[key]
         return self
 
     def save(self):
-        object_values = str(self.__dict__.values()).replace("None", "'None'")[13:-2]
-        print(object_values)
-        Db().save('viewer', object_values)
+        filtered = str(self.filter_values().values()).replace("None", "'None'")[13:-2]
+        Db().save('viewer', filtered)
         return self
 
     def delete(self):
-        request_id = str(self.__dict__.values())[13:14]
-        Db().delete('viewer', request_id)
+        request_id = list(self.__dict__.values())
+        Db().delete('viewer', request_id[0])
+

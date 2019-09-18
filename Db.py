@@ -20,21 +20,27 @@ from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 class Db:
     # database="brexbot", host="198.71.225.59", port=3306, user="brexbot", password="6Ke04_ij"
     def __init__(self, host=Config.HOST, database=Config.DATABASE, username=Config.USERNAME, password=Config.PASSWORD, port=Config.PORT):
         # Create a connection to the database
-        self.cnx = mysql.connector.connect(
-            database=database,
-            host=host,
-            port=port,
-            user=username,
-            password=password)
-        
-        logging.info("Connected.")
+        if 'self.cnx' in locals():
+            pass
+        else:
+            self.cnx = mysql.connector.connect(
+                database=database,
+                host=host,
+                port=port,
+                user=username,
+                password=password)
 
-        # Get a cursor
+            logging.info("Connected.")
+
         self.cur = self.cnx.cursor()
+
+        # # Get a cursor
+        # self.cur = self.cnx.cursor()
 
     # Check if a user exists in the database
     def viewer_exists(self, viewer, channel):
@@ -227,8 +233,8 @@ class Db:
     # Media Functions
     #####################################################################################
 
-    def load_by_id(self, method_type, _id, channel=Config.CHANNEL_NAME):
-        sql = 'SELECT * FROM ' + method_type + ' WHERE id = \"' + str(_id) + '\" AND channel = \"' + channel + '\"'
+    def load_by_id(self, method_type, id, channel=Config.CHANNEL_NAME):
+        sql = 'SELECT * FROM ' + method_type + ' WHERE id = \"' + str(id) + '\" AND channel = \"' + channel + '\"'
         self.cur.execute(sql)
         return self.cur.fetchone()
 
