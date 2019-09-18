@@ -11,7 +11,7 @@ from Db import Db
 import Config
 
 
-class Channel():
+class Channel:
     def __init__(self, channel = Config.CHANNEL_NAME):
         self.channel = channel
         self.broadcaster_language = None

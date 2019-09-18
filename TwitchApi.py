@@ -25,7 +25,7 @@ class TwitchApi:
             logging.error("Error parsing JSON data.", e)
 
     # Get the ID of a given username
-    def get_user_id(self,username =Config.CHANNEL_NAME):
+    def get_user_id(self, username=Config.CHANNEL_NAME):
         try:
             url = 'https://api.twitch.tv/helix/users?login=' + username
             user_data = self.json_data(url, username)
@@ -101,13 +101,15 @@ class TwitchApi:
             logging.error("Unable to determine if " + viewer + " is following the channel.", e)
 
     # Check if a viewer is subscribed to teh channel
-    # TODO: Needs to return True/False
     def is_subscriber(self, viewer):
         try:
             viewer_id = self.get_user_id(viewer)
             url = 'https://api.twitch.tv/helix/subscriptions?broadcaster_id=' + self.channel_id + '&user_id=' + viewer_id + '&tier'
             sub_data = self.json_data(url)
-            return sub_data
+            if not sub_data['data']:
+                return False
+            else:
+                return True
         except Exception as e:
             logging.error("Unable to determin if " + viewer + " is subscribed to the channel.", e)
 
@@ -127,7 +129,7 @@ class TwitchApi:
             viewer_id = self.get_user_id(viewer)
             url = 'https://api.twitch.tv/helix/moderation/banned?broadcaster_id=' + self.channel_id + '&user_id=' + viewer_id
             banned_data = self.json_data(url)
-            if banned_data is None:
+            if banned_data['data'] is None:
                 return False
             else:
                 return True

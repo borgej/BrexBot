@@ -7,10 +7,11 @@ __maintainer__ = "Børge Jakobsen, Thomas Donegan"
 __status__ = "Development"
 
 from Db import Db
+from datetime import datetime
 
 
 class Quote:
-    def __init__(self, id, channel, nr, quote, viewer, created):
+    def __init__(self, id, channel, nr, quote, viewer, created=datetime.now().strftime('%Y-%m-%d %H:%M:%S')):
         self.id = id
         self.channel = channel
         self.nr = nr
