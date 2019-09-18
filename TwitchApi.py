@@ -6,6 +6,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 # Class to access the new Twitch 'HELIX' API
 # The class receives it's authentication from a dictionary (HEADERS) in the Config.py file.
 # The "Bearer" token must have the required scopes to perform successful API calls.
