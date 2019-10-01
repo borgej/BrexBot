@@ -160,3 +160,26 @@ class TwitchApi:
         except Exception as e:
             logging.error('Unable to perform V5 API call', e)
             return None
+
+    # The below will retrieve current "Chatters" in a channel.
+    # THESE ARE NOT A TWITCH API FUNCTIONS - UNDOCUMENTED
+    # This has a delayed refresh time (currently unknown).
+    # Note: Due to some viewers/bots being connected anon to the channel
+    # this will only show chatters and not all viewers.
+    def get_chatter_data(self, channel):
+        try:
+            url = 'https://tmi.twitch.tv/group/user/' + channel + '/chatters'
+            chatter_data = self.json_data(url)
+            return chatter_data
+        except Exception as e:
+            logging.error('Unable to retrieve chatter data. ', e)
+            return None
+
+    def all_chatter_names(self, channel):
+        try:
+            chatter_data = self.get_chatter_data(channel)['chatters']
+            chatters = [item for sublist in chatter_data.values() for item in sublist]
+            return chatters
+        except Exception as e:
+            logging.error('Unable to retrieve chatter names. ', e)
+            return None

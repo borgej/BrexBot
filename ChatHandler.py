@@ -8,6 +8,7 @@ __status__ = "Development"
 
 import twitch
 import logging
+import Config
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -81,4 +82,3 @@ class ChatHandler():
             self.chat_connection.send(message)
         except Exception as e:
             self.logger.exception("Error sending chat message: " + message)
-

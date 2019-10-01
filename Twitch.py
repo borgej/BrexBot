@@ -8,7 +8,3 @@ __status__ = "Development"
 
 import logging
 from twitch.api import v3
-
-
-channel = twitch.api.v3.channels.by_name("BeeJeey")
-print(channel)

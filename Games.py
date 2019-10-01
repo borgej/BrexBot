@@ -9,8 +9,11 @@ __status__ = "Development"
 import random
 from Db import Db
 import logging
+import random
+from random import shuffle
 
 logging.basicConfig(level=logging.DEBUG)
+
 
 class Roulette:
     def __init__(self, user):
@@ -52,6 +55,18 @@ class Dice:
                 big_win = bet * 1.5
                 con.add_points(twitchusername, big_win)
                 logging.info(twitchusername + " won the big one.")
+
+
+# class GangWars:
+#     def __init__(self, channel, bet):
+#         self.channel = channel
+#         self.bet = bet
+#         self.gang_names = ['Cali Cartel', 'Norte', 'North Coast Cartel', 'Leticia Cartel', 'Los Rastrojos', 'New Generation', 'Los Nevados', 'Los Machos', 'Bloque Meta', 'Libertadores', 'Black Eagles']
+#         self.gang_selection = random.sample(self.gang_names, 2)
+#         self.viewers = []
+#         self.shuffle = shuffle(self.gang_names)
+
+
 
 
 

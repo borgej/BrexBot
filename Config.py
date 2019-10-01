@@ -2,6 +2,9 @@ VERSION = "v0.1 Alpha"
 
 CHANNEL_NAME = 'brexbottest'
 
+# Chat OAuth for testing
+CHAT_AUTH = 'oauth:w93cae5eglqfgcuql7n0idkx0tg9pv'
+
 # HELIX API Bearer Token (New Twitch API)
 HEADERS = {'Authorization': 'Bearer c7aeqkgcwjcdak70tkhuhdsmc1a81n'}
 
